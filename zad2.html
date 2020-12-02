@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Second Advent Day</h1>
+<h3>My input is: </h3>
+<input type="file" name="inputfile"
+        id="inputfile"> 
+<br> 
+
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<pre id="input"></pre></div> 
+<h2>Problem two - part one</h2>
+</br>
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<span id="sol"></span></div> 
+<h3>The answer is <span id="answer"></span></h3>
+
+<h2>Problem two - part two</h2>
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<span id="sol2"></span></div>
+<h3>The answer is <span id="answer2"></span></h3>
+
+<!-- GLOBAL VARIABLES -->
+<script>
+var input = [];
+
+document.getElementById('inputfile') 
+    .addEventListener('change', function() { 
+        
+    var fr=new FileReader(); 
+    fr.onload=function(){ 
+        document.getElementById('input') 
+                .textContent=fr.result;
+        
+    input = fr.result.split("\n");
+
+    mainFunctionTask1();
+    mainFunctionTask2();
+    } 
+        
+    fr.readAsText(this.files[0]);
+}) 
+
+function mainFunctionTask1(){
+    var z = "";    
+    var len = input.length;
+    var noValidPasswords = 0;
+    
+    for (var i = 0; i<len-1; i++){
+    
+       var rule = input[i].split(':')[0];
+       var passwd = input[i].split(':')[1];
+       
+       var rule_letter = (rule.trim()).split(" ")[1];
+       var rule_nums = (rule.trim()).split(" ")[0];
+       
+       var rule_min = rule_nums.split("-")[0];
+       var rule_max = rule_nums.split("-")[1];
+       
+       var occurences = passwd.split(rule_letter).length - 1;
+       
+       if (occurences <= rule_max && occurences >= rule_min) {
+            noValidPasswords ++;
+            z += '<span style="color:green">' + input[i] + '</span></br>';
+       }
+       else 
+            z += '<span style="color:red">' + input[i] + '</span></br>';
+       
+    }
+    
+    
+    document.getElementById("answer").innerHTML = noValidPasswords;    
+    document.getElementById("sol").innerHTML = z;
+}
+
+function mainFunctionTask2(){
+    var z2 = "";    
+    var len = input.length;
+    var noValidPasswords2 = 0;
+    
+    for (var i = 0; i<len-1; i++){
+    
+       var rule = input[i].split(':')[0];
+       var passwd = input[i].split(':')[1];
+       
+       var rule_letter = (rule.trim()).split(" ")[1];
+       var rule_nums = (rule.trim()).split(" ")[0];
+       
+       var rule_dig1 = rule_nums.split("-")[0];
+       var rule_dig2 = rule_nums.split("-")[1];
+              
+       if ((passwd[rule_dig1] == rule_letter && passwd[rule_dig2] != rule_letter) ||
+           (passwd[rule_dig1] != rule_letter && passwd[rule_dig2] == rule_letter)) {
+            noValidPasswords2 ++;
+            z2 += '<span style="color:green">' + input[i] + '</span></br>';
+       }
+       else 
+            z2 += '<span style="color:red">' + input[i] + '</span></br>';
+       
+    }
+    
+    
+    document.getElementById("answer2").innerHTML = noValidPasswords2;    
+    document.getElementById("sol2").innerHTML = z2;
+}
+</script>
+
+<button onclick="window.print()">Print this page</button>
+</body>
+</html>
