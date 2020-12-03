@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Third Advent Day</h1>
+<h3>My input is: </h3>
+<input type="file" name="inputfile"
+        id="inputfile"> 
+<br> 
+
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<pre id="input"></pre></div> 
+<h2>Problem two - part one</h2>
+</br>
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<pre id="sol"></pre></div> 
+<h3>The answer is <span id="answer"></span></h3>
+
+<h2>Problem two - part two</h2>
+<div style="width: auto; height: 100px; overflow-y: scroll;">
+<pre id="sol2"></pre></div>
+<h3>The answer is <span id="answer2"></span></h3>
+
+<!-- GLOBAL VARIABLES -->
+<script>
+var input = [];
+
+document.getElementById('inputfile') 
+    .addEventListener('change', function() { 
+        
+    var fr=new FileReader(); 
+    fr.onload=function(){ 
+        document.getElementById('input') 
+                .textContent=fr.result;
+        
+    input = fr.result.split("\n");
+
+    mainFunctionTask1();
+    mainFunctionTask2();
+    } 
+        
+    fr.readAsText(this.files[0]);
+}) 
+
+function mainFunctionTask1(){
+    var z = "";    
+    var len = input.length;
+    var width = input[0].length;
+    var noTrees = 0;
+    
+    var hor_idx = 0;
+    
+    for (var i = 0; i<len-1; i++){
+    
+       var object = input[i][hor_idx];
+       hor_idx += 3;
+       hor_idx %= width;
+       
+       var first = (input[i]).slice(0, hor_idx);
+       var second = (input[i]).slice(hor_idx+1, width);
+       
+       if (object == "." ) {
+            z += '<span style="color:LightGreen">' + first + '</span>'
+                +'<span style="color:Green">' + "O" + '</span>'
+                + '<span style="color:LightGreen">' + second + '</span>' +'</br>';
+       }
+       else {
+            noTrees++;
+            z += '<span style="color:Tomato">' + first + '</span>'
+                +'<span style="color:Red">' + "X" + '</span>'
+                + '<span style="color:Tomato">' + second + '</span>' +'</br>';
+        }
+       
+    }
+    
+    document.getElementById("answer").innerHTML = noTrees;    
+    document.getElementById("sol").innerHTML = z;
+}
+
+function mainFunctionTask2(){
+    var z2 = "";    
+    var len = input.length;
+    var width = input[0].length;
+    var noTrees2 = 0;
+    
+    var hor_idx = 0;
+    
+    function countTrees(rigth, down) {
+        var noTrees = 0;
+        var i = 0;
+        var hor_idx = 0;
+        
+        while (i<len-1){
+            var object = input[i][hor_idx];
+            if (object == "#" ) 
+                noTrees++;
+            i += down;
+            hor_idx += rigth;
+            hor_idx %= width;        
+        }
+        
+        return noTrees;
+    }
+    
+    var slope11 = countTrees(1,1);
+    var slope31 = countTrees(3,1);
+    var slope51 = countTrees(5,1);
+    var slope71 = countTrees(7,1);
+    var slope12 = countTrees(1,2);
+    
+    z2 +=   "Slope Right 1, down 1: " + slope11 + "</br>" +
+            "Slope Right 3, down 1: " + slope31 + "</br>" +
+            "Slope Right 5, down 1: " + slope51 + "</br>" +
+            "Slope Right 7, down 1: " + slope71 + "</br>" +
+            "Slope Right 1, down 2: " + slope12 + "</br>";
+    
+    document.getElementById("answer2").innerHTML = slope11*slope31*slope51*slope71*slope12;    
+    document.getElementById("sol2").innerHTML = z2;
+}
+
+</script>
+
+<button onclick="window.print()">Print this page</button>
+</body>
+</html>
